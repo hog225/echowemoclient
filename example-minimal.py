@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ fauxmo_minimal.py - Fabricate.IO
 
     This is a demo python file showing what can be done with the debounce_handler.
@@ -15,19 +16,33 @@
 import fauxmo
 import logging
 import time
-
+import threadFunction as tf
 from debounce_handler import debounce_handler
 
 logging.basicConfig(level=logging.DEBUG)
+
+# ------------ Bluetooth Address -----------
+HC_06_com_addr = "20:14:04:11:22:37"
+HC_06_com_port = 1
+
+# ------------ Device Name -----------------
+COMPUTER = 'Desktop'
+
+
 
 class device_handler(debounce_handler):
     """Publishes the on/off state requested,
        and the IP address of the Echo making the request.
     """
-    TRIGGERS = {"device": 51999}
+    # Device
+    TRIGGERS = {COMPUTER: 51999}
 
     def act(self, client_address, state, name):
         print "State", state, "on ", name, "from client @", client_address
+        # "Desktop" 에 관한 명령이 Echo dot 으로 들어오면 처리해 주는 부분
+        if name == COMPUTER:
+            if state == True:
+                tf.bt_q.put_nowait('True')
         return True
 
 if __name__ == "__main__":
@@ -38,6 +53,10 @@ if __name__ == "__main__":
     u.init_socket()
     p.add(u)
 
+    tf.connectBluetooth(HC_06_com_addr, HC_06_com_port)
+    RecoveryThread = tf.MThread(1, "RecoveryThread", tf.recoveryProcess, HC_06_com_addr, HC_06_com_port)
+    RecoveryThread.start()
+    print 'fauxmo start'
     # Register the device callback as a fauxmo handler
     d = device_handler()
     for trig, port in d.TRIGGERS.items():
@@ -52,4 +71,5 @@ if __name__ == "__main__":
             time.sleep(0.1)
         except Exception, e:
             logging.critical("Critical exception: " + str(e))
-            break
+            RecoveryThread.stop_flag.clear()
+            RecoveryThread.join()
