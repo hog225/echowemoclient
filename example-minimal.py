@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """ fauxmo_minimal.py - Fabricate.IO
 
     This is a demo python file showing what can be done with the debounce_handler.
@@ -33,10 +34,12 @@ class device_handler(debounce_handler):
     """Publishes the on/off state requested,
        and the IP address of the Echo making the request.
     """
-    TRIGGERS = {"Desktop": 51999}
+    # Device
+    TRIGGERS = {COMPUTER: 51999}
 
     def act(self, client_address, state, name):
         print "State", state, "on ", name, "from client @", client_address
+        # "Desktop" 에 관한 명령이 Echo dot 으로 들어오면 처리해 주는 부분
         if name == COMPUTER:
             if state == True:
                 tf.bt_q.put_nowait('True')

@@ -90,7 +90,7 @@ class MTimer:
 
 
 # bluetooth ------------------------------------
-
+# bluetooth 연결 함수 데이터 Send thread 와 연결 확인 Timer 를 생성
 def connectBluetooth(adress, port):
     try:
         sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
@@ -134,6 +134,7 @@ def sendFunction(bt_sock, data):
         conn_check_q.put_nowait(1)
         pass
 
+# Callback 함수
 def sendDataToBT(sock, t_event):
     while t_event.is_set():
         try:
@@ -147,7 +148,7 @@ def sendDataToBT(sock, t_event):
     logging.debug('sendDataToBT Thread Kill !')
     sock.close()
 
-
+# 재연결 함수
 def recoveryProcess(adress, port, t_event):
     while t_event.is_set():
         try:
