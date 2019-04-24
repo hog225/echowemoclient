@@ -21,6 +21,12 @@ from debounce_handler import debounce_handler
 
 logging.basicConfig(level=logging.DEBUG)
 
+# ------------ MQTT INFO -----------
+BROKER_IP = "127.0.0.1"
+BROKER_PORT = 1883
+MQ_TOPIC = "/home_iot/Desktop"
+
+
 # ------------ Bluetooth Address -----------
 HC_06_com_addr = "20:14:04:11:22:37"
 HC_06_com_port = 1
@@ -38,11 +44,13 @@ class device_handler(debounce_handler):
     TRIGGERS = {COMPUTER: 51999}
 
     def act(self, client_address, state, name):
-        print "State", state, "on ", name, "from client @", client_address
+        print "State", state, "on ", name, "from client @"
         # "Desktop" 에 관한 명령이 Echo dot 으로 들어오면 처리해 주는 부분
         if name == COMPUTER:
             if state == True:
                 tf.bt_q.put_nowait('True')
+            elif state == False:
+                tf.publishMSG(BROKER_IP, BROKER_PORT, MQ_TOPIC, 'Off')
         return True
 
 if __name__ == "__main__":

@@ -6,16 +6,13 @@ import Queue
 import bluetooth
 import time
 import sys
+import paho.mqtt.client as mqtt
 
 bt_q = Queue.Queue()
 conn_check_q = Queue.Queue()
 
 RECONNECTION_TIME = 30 #재연결 시간
 BT_CONN_MSG_SEND_TIME = 240 #주기적으로 Bluetooth 살아 있는지 확인 하는 시간
-
-
-HC_06_com_addr = "20:14:04:11:22:37"
-HC_06_com_port = 1
 
 root = logging.getLogger()
 root.setLevel(logging.DEBUG)
@@ -185,6 +182,13 @@ def recoveryProcess(adress, port, t_event):
         except Exception, e:
             print 'RecoveryProcess error' + str(e)
         time.sleep(0.1)
+
+#--- MQTT ----------
+def publishMSG(broker_ip, broker_port, topic, msg):
+	client = mqtt.Client()
+	client.connect(broker_ip, broker_port)
+
+	client.publish(topic, msg)
 
 
 if __name__ == "__main__":
