@@ -18,6 +18,9 @@ import logging
 import time
 import threadFunction as tf
 from debounce_handler import debounce_handler
+import gpioControl as gc
+import sonoffStateChange as ssc
+from config import Config
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -34,7 +37,14 @@ HC_06_com_port = 1
 # ------------ Device Name -----------------
 COMPUTER = 'Desktop'
 
-
+# ------------ Touch Sonoff ----------------
+f = file('account.cfg')
+cfg = Config(f)
+USERNAME = cfg.username
+PASSWORD = cfg.password
+API_REGION = cfg.api_region
+SONOFF_LAMP = 'Lamp'
+# ------------------------------------------
 
 class device_handler(debounce_handler):
     """Publishes the on/off state requested,
@@ -72,12 +82,29 @@ if __name__ == "__main__":
 
     # Loop and poll for incoming Echo requests
     logging.debug("Entering fauxmo polling loop")
-    while True:
-        try:
-            # Allow time for a ctrl-c to stop the process
-            p.poll(100)
-            time.sleep(0.1)
-        except Exception, e:
-            logging.critical("Critical exception: " + str(e))
-            RecoveryThread.stop_flag.clear()
-            RecoveryThread.join()
+
+    # -----------Touch Sensor Control Sonoff--------------------
+    s = ssc.logOnSonoff(USERNAME, PASSWORD, API_REGION)
+    gc.setGPIO()
+    gc.runTouchSensor(None, ssc.changeSonoffState, s, SONOFF_LAMP)
+
+    # ----------------------------------------
+    try:
+        while True:
+            try:
+                # Allow time for a ctrl-c to stop the process
+                p.poll(100)
+                time.sleep(0.1)
+            except Exception, e:
+                logging.critical("Critical exception: " + str(e))
+                RecoveryThread.stop_flag.clear()
+                RecoveryThread.join()
+
+    except KeyboardInterrupt:
+        print "Keyboard Interrupt"
+
+    except:
+        print "other error "
+
+    finally:
+        gc.clearGPIO()
