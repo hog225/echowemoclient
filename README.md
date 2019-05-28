@@ -1,5 +1,5 @@
 # echowemoclient
-amazon echo dot 을 이용한 
+amazon echo dot 을 이용한 Home IOT 시스템
 
 # Enable Virtualenv 
 source ecvenv/bin/activate
