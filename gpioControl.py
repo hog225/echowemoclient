@@ -4,6 +4,8 @@ import time
 
 IN_TOUCH = 4  # GPIO 4
 OUT_LED = 17  # GPIO 17
+IR_R = 18
+IR_S = 22
 
 def setGPIO():
     # BCM

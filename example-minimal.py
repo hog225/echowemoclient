@@ -36,6 +36,7 @@ HC_06_com_port = 1
 
 # ------------ Device Name -----------------
 COMPUTER = 'Desktop'
+AIRCON = 'Aircon'
 
 # ------------ Touch Sonoff ----------------
 f = file('account.cfg')
@@ -51,7 +52,7 @@ class device_handler(debounce_handler):
        and the IP address of the Echo making the request.
     """
     # Device
-    TRIGGERS = {COMPUTER: 51999}
+    TRIGGERS = {COMPUTER: 51999, AIRCON: 52000}
 
     def act(self, client_address, state, name):
         print "State", state, "on ", name, "from client @"
