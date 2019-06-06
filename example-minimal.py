@@ -21,6 +21,7 @@ from debounce_handler import debounce_handler
 import gpioControl as gc
 import sonoffStateChange as ssc
 from config import Config
+import irlib as ir
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -45,7 +46,10 @@ USERNAME = cfg.username
 PASSWORD = cfg.password
 API_REGION = cfg.api_region
 SONOFF_LAMP = 'Lamp'
-# ------------------------------------------
+# ------------------IR BUTTON----------------------
+IR_BUTTON_FILE = "ir-codes"
+AIRCON_ON = 1
+AIRCON_OFF = 2
 
 class device_handler(debounce_handler):
     """Publishes the on/off state requested,
@@ -62,6 +66,11 @@ class device_handler(debounce_handler):
                 tf.bt_q.put_nowait('True')
             elif state == False:
                 tf.publishMSG(BROKER_IP, BROKER_PORT, MQ_TOPIC, 'Off')
+        elif name == AIRCON:
+            if state == True:
+                ir.sendIRSignal(IR_BUTTON_FILE, AIRCON_ON)
+            elif state == False:
+                ir.sendIRSignal(IR_BUTTON_FILE, AIRCON_OFF)
         return True
 
 if __name__ == "__main__":

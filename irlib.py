@@ -355,7 +355,7 @@ def cbf(gpio, level, tick):
          in_code = False
          end_of_code()
 
-# ------------------- MYCODE
+# ------------------- MYCODE --------------------
 
 
 def sendIRSignal(ir_file_name, btn_code):
