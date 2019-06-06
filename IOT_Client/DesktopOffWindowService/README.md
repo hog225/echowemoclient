@@ -1,20 +1,30 @@
-# 알렉사로 컴퓨터를 끄기위한 Window Service Code 입니다. 
-https://lifeonroom.com/diy/remote-computer-off-2/ 를 참조하세요 ^^
+# Turn off Window Service Code with alexa. 
 
-- Python 36
-- makeVenv.bat - 가상환경 생성 (Python 설치 경로가 c:\Python36 이어야함)
-- activeVenv.bat - 가상환경 실행 
++ check below post
+    
+    https://lifeonroom.com/diy/remote-computer-off-2/ 
 
 
-* 실행파일 만들기 
+- Use Python36
+## makeVenv.bat
+- make Virtualenv
+    - Python path should be "c:\Python36" 
+ 
+## activeVenv.bat
+- activate virtualenv 
+
+
+## make EXE file
+ 
 pyinstaller --onefile --hidden-import win32timezone controlDeskTopService.py
 
-* 실행파일 서비스 등록 
+## register Service 
 dist\controlDeskTopService.exe install
 
-* 서비스 booting 시 자동 실행 
-crlt + alt + del -> 서비스 -> DeskTopControl 우클릭 -> 서비스 열기 -> Remote Control Desktop Service -> 시작유형 자동
+## auto launch when booting 
+crlt + alt + del -> Service -> DeskTopControl right click -> Open Service -> Remote Control Desktop Service -> Start type Auto
+    
 
-* 실행파일 서비스 종료 및 제거 
+## Service end or delete
 dist\controlDeskTopService.exe stop
 dist\controlDeskTopService.exe remove
