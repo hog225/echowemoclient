@@ -6,6 +6,12 @@
 
 
 - Use Python36
+
+- Operation
+    * launch makeVenv.bat
+    * launch activeVenv.bat
+    * pip install -r requirements.txt
+  
 ## makeVenv.bat
 - make Virtualenv
     - Python path should be "c:\Python36" 
