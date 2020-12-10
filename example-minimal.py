@@ -22,8 +22,11 @@ import gpioControl as gc
 import sonoffStateChange as ssc
 from config import Config
 import irlib as ir
+import os
 
 logging.basicConfig(level=logging.DEBUG)
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ------------ MQTT INFO -----------
 BROKER_IP = "127.0.0.1"
@@ -40,7 +43,8 @@ COMPUTER = 'Desktop'
 AIRCON = 'Aircon'
 
 # ------------ Touch Sonoff ----------------
-f = file('account.cfg')
+accnt_dir = os.path.join(BASE_DIR, "account.cfg")
+f = file(accnt_dir)
 cfg = Config(f)
 USERNAME = cfg.username
 PASSWORD = cfg.password
